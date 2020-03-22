@@ -54,9 +54,11 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import MuiPickersUtilsProvider from "@material-ui/pickers/MuiPickersUtilsProvider";
 import DatePicker from "@material-ui/pickers/DatePicker";
 import DateFnsUtils from "@date-io/date-fns";
+import background from "./picture/gameBackground.png";
 
 const useStyles = makeStyles(theme => ({
   grow: {
+    overflow: "hidden",
     flexGrow: 1,
     backgroundColor: "#010440"
   },
@@ -65,14 +67,16 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     color: theme.palette.common.white,
+    textShadow: "2px 2px #000000",
     paddingLeft: "50px",
     backgroundImage:
-      "linear-gradient(to right, rgba(3, 236, 252,.1), rgba(2, 6, 89,0))",
+      "linear-gradient(to right, rgba(3, 236, 252,.4), rgba(2, 6, 89,.0))",
     borderLeft: "5px solid #03ecfc"
   },
   titleBox: {
     paddingTop: "100px",
-    marginBottom: "50px"
+    marginBottom: "50px",
+    backgroundImage: `url(${background})`
   },
   search: {
     position: "relative",
@@ -142,19 +146,30 @@ const useStyles = makeStyles(theme => ({
   gridTile: {
     height: 450,
     margin: "10px",
-    "&hover:": {
-      transform: "scale(1.2)"
+    "&:hover": {
+      transform: "scale(1.03)"
     }
   },
   listItem: {
     color: theme.palette.common.white,
     backgroundImage:
-      "linear-gradient(to right, rgba(3, 236, 252,.1), rgba(2, 6, 89,0))"
-    // border: "5px solid",
-    // borderImage: "linear-gradient(45deg, rgb(0,143,104), rgb(250,224,66)) 1"
+      "linear-gradient(to right, rgba(3, 236, 252,.1), rgba(2, 6, 89,0))",
+    "&:hover": {
+      backgroundColor: "rgba(3, 236, 252,.2)"
+    }
+  },
+  listItemActive: {
+    borderLeft: "2px solid #03ecfc",
+    color: theme.palette.common.white,
+    backgroundImage:
+      "linear-gradient(to right, rgba(3, 236, 252,.3), rgba(2, 6, 89,0))",
+    "&:hover": {
+      backgroundColor: "rgba(3, 236, 252,.3)"
+    }
   },
   filterContainer: {
-    width: "100%",
+    width: "90%",
+    margin: "auto",
     color: theme.palette.common.white,
     backgroundImage:
       "linear-gradient(to left, rgba(255, 0, 132,.2), rgba(2, 6, 89,0))",
@@ -177,7 +192,10 @@ const useStyles = makeStyles(theme => ({
   orderByBtn: {
     color: theme.palette.common.white,
     backgroundImage:
-      "linear-gradient(to right, rgba(3, 236, 252,1), rgba(2, 6, 89,0))"
+      "linear-gradient(to right, rgba(3, 236, 252,7), rgba(2, 6, 89,0))",
+    "&:hover": {
+      backgroundColor: "rgba(3, 236, 252,.5)"
+    }
   },
   appbar1: {
     backgroundColor: "#010326",
@@ -189,13 +207,25 @@ const useStyles = makeStyles(theme => ({
     zIndex: 1099
   },
   giveawayBtn: {
-    color: "#03ecfc"
+    color: "#03ecfc",
+    "&:hover": {
+      backgroundColor: "rgba(3, 236, 252,.3)"
+    }
   },
   pageBtn: {
     color: theme.palette.common.white,
     backgroundImage:
       "linear-gradient(to top, rgba(3, 236, 252,.1), rgba(2, 6, 89,0))",
-    borderBottom: "2px solid #03ecfc"
+    borderBottom: "2px solid #03ecfc",
+    "&:hover": {
+      backgroundColor: "rgba(3, 236, 252,.25)"
+    }
+  },
+  appbar2Btn: {
+    color: theme.palette.common.white,
+    "&:hover": {
+      backgroundColor: "rgba(3, 236, 252,.25)"
+    }
   },
   inputMainRoot: {
     color: "inherit",
@@ -252,7 +282,10 @@ const useStyles = makeStyles(theme => ({
   },
   text: {
     color: "#ffffff",
-    textTransform: "capitalize"
+    textTransform: "capitalize",
+    "&:hover": {
+      backgroundColor: "rgba(255, 0, 132,.5)"
+    }
   },
   tweetBox: {
     width: "100%",
@@ -310,6 +343,9 @@ const useStyles = makeStyles(theme => ({
     "& .MuiInput-underline:after": {
       borderBottom: "2px solid #ff0084"
     }
+  },
+  gridList: {
+    height: "calc(100% + 100px)"
   }
 }));
 
@@ -695,9 +731,12 @@ export default function Catalog() {
 
   const renderFilter = (
     <React.Fragment>
-      {" "}
       {/* Price List Filter */}
-      <ListItem button className={classes.listItem} onClick={handleClickPrice}>
+      <ListItem
+        button
+        className={openPrice ? classes.listItemActive : classes.listItem}
+        onClick={handleClickPrice}
+      >
         <ListItemText primary="Price" />
         {openPrice ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
@@ -733,7 +772,7 @@ export default function Catalog() {
       {/* Availability List Filter */}
       <ListItem
         button
-        className={classes.listItem}
+        className={openAvailability ? classes.listItemActive : classes.listItem}
         onClick={handleClickAvailability}
       >
         <ListItemText primary="Availability" />
@@ -779,7 +818,11 @@ export default function Catalog() {
         </FormGroup>
       </Collapse>
       {/* Genre List Filter */}
-      <ListItem button className={classes.listItem} onClick={handleClickGenre}>
+      <ListItem
+        button
+        className={openGenre ? classes.listItemActive : classes.listItem}
+        onClick={handleClickGenre}
+      >
         <ListItemText primary="Genre" />
         {openGenre ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
@@ -855,7 +898,7 @@ export default function Catalog() {
       {/* Developer List Filter */}
       <ListItem
         button
-        className={classes.listItem}
+        className={openDeveloper ? classes.listItemActive : classes.listItem}
         onClick={handleClickDeveloper}
       >
         <ListItemText primary="Developer" />
@@ -923,7 +966,7 @@ export default function Catalog() {
       {/* Platform List Filter */}
       <ListItem
         button
-        className={classes.listItem}
+        className={openPlatform ? classes.listItemActive : classes.listItem}
         onClick={handleClickPlatform}
       >
         <ListItemText primary="Platform" />
@@ -971,7 +1014,7 @@ export default function Catalog() {
       {/* Activation List Filter */}
       <ListItem
         button
-        className={classes.listItem}
+        className={openActivation ? classes.listItemActive : classes.listItem}
         onClick={handleClickActivation}
       >
         <ListItemText primary="Activation" />
@@ -1019,7 +1062,7 @@ export default function Catalog() {
       {/* Release Date List Filter */}
       <ListItem
         button
-        className={classes.listItem}
+        className={openReleaseDate ? classes.listItemActive : classes.listItem}
         onClick={handleClickReleaseDate}
       >
         <ListItemText primary="Release Date" />
@@ -1317,14 +1360,24 @@ export default function Catalog() {
               m={1}
               p={1}
             >
-              <Button color="inherit">Home</Button>
+              <Button className={classes.appbar2Btn} color="inherit">
+                Home
+              </Button>
               <Button className={classes.pageBtn} color="inherit">
                 Catalog
               </Button>
-              <Button color="inherit">News</Button>
-              <Button color="inherit">PC</Button>
-              <Button color="inherit">Playstation</Button>
-              <Button color="inherit">Xbox</Button>
+              <Button className={classes.appbar2Btn} color="inherit">
+                News
+              </Button>
+              <Button className={classes.appbar2Btn} color="inherit">
+                PC
+              </Button>
+              <Button className={classes.appbar2Btn} color="inherit">
+                Playstation
+              </Button>
+              <Button className={classes.appbar2Btn} color="inherit">
+                Xbox
+              </Button>
             </Box>
           </Toolbar>
         </AppBar>
@@ -1400,7 +1453,9 @@ export default function Catalog() {
               <Grid item xs={12} sm={6}>
                 <ListItem
                   button
-                  className={classes.listItem}
+                  className={
+                    openFilter ? classes.listItemActive : classes.listItem
+                  }
                   onClick={handleClickFilter}
                 >
                   <ListItemText primary="Filter" />
@@ -1445,8 +1500,8 @@ export default function Catalog() {
 
             {/* Main Content */}
             <Grid item xs={12} md={9}>
-              <Grid container spacing={3}>
-                <GridList cellHeight="auto" className={classes.gridList}>
+              <Grid container className={classes.gridList} spacing={3}>
+                <GridList cellHeight="auto">
                   {games.map(game => (
                     <Grid item xs={12} sm={6} md={4}>
                       <GridListTile className={classes.gridTile}>
