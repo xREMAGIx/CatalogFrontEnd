@@ -54,7 +54,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import MuiPickersUtilsProvider from "@material-ui/pickers/MuiPickersUtilsProvider";
 import DatePicker from "@material-ui/pickers/DatePicker";
 import DateFnsUtils from "@date-io/date-fns";
-import background from "./picture/gameBackground.png";
+import background from "./img/gameBackground.png";
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -344,8 +344,11 @@ const useStyles = makeStyles(theme => ({
       borderBottom: "2px solid #ff0084"
     }
   },
-  gridList: {
+  gridContainer: {
     height: "calc(100% + 100px)"
+  },
+  gridList: {
+    maxWidth: "inherit"
   }
 }));
 
@@ -615,6 +618,8 @@ export default function Catalog() {
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = tweetSteps.length;
 
+  const [searchTerm, setSearchTerm] = React.useState("");
+
   const handleClickListLanguage = event => {
     setLanguageAnchorEl(event.currentTarget);
   };
@@ -728,6 +733,17 @@ export default function Catalog() {
   const handleBack = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
+
+  const handleSearchChange = event => {
+    setSearchTerm(event.target.value);
+    console.log(event.target.value);
+  };
+
+  const results = !searchTerm
+    ? games
+    : games.filter(game =>
+        game.t.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+      );
 
   const renderFilter = (
     <React.Fragment>
@@ -1478,7 +1494,10 @@ export default function Catalog() {
                   <SearchIcon />
                 </div>
                 <InputBase
+                  type="text"
                   placeholder="Search…"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
                   classes={{
                     root: classes.inputMainRoot,
                     input: classes.inputMainInput
@@ -1500,10 +1519,16 @@ export default function Catalog() {
 
             {/* Main Content */}
             <Grid item xs={12} md={9}>
-              <Grid container className={classes.gridList} spacing={3}>
+              <Grid container className={classes.gridContainer} spacing={3}>
                 <GridList cellHeight="auto">
-                  {games.map(game => (
-                    <Grid item xs={12} sm={6} md={4}>
+                  {results.map(game => (
+                    <Grid
+                      item
+                      className={classes.gridList}
+                      xs={12}
+                      sm={6}
+                      md={4}
+                    >
                       <GridListTile className={classes.gridTile}>
                         <img
                           src="https://source.unsplash.com/random"
@@ -1799,6 +1824,7 @@ export default function Catalog() {
                     <List component="nav">
                       <ListItem
                         button
+                        className={classes.text}
                         aria-haspopup="true"
                         aria-controls="lock-menu"
                         onClick={handleClickListLanguage}
