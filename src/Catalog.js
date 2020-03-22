@@ -348,7 +348,7 @@ const useStyles = makeStyles(theme => ({
     height: "calc(100% + 100px)"
   },
   gridList: {
-    maxWidth: "inherit"
+    width: "100%"
   }
 }));
 
@@ -549,6 +549,10 @@ const languages = [
   "Vietnamese"
 ];
 
+var filterArr = [1, 2, 3];
+
+var tableData = [...games];
+
 export default function Catalog() {
   const classes = useStyles();
   const theme = useTheme();
@@ -619,6 +623,12 @@ export default function Catalog() {
   const maxSteps = tweetSteps.length;
 
   const [searchTerm, setSearchTerm] = React.useState("");
+
+  const results = !searchTerm
+    ? tableData
+    : tableData.filter(game =>
+        game.t.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+      );
 
   const handleClickListLanguage = event => {
     setLanguageAnchorEl(event.currentTarget);
@@ -695,11 +705,12 @@ export default function Catalog() {
     setOpenReleaseDate(!openReleaseDate);
   };
 
-  const handleAvailabilityChange = name => event => {
+  const handleAvailabilityChange = (name, option) => event => {
     setAvailabilityState({
       ...availabilityState,
       [name]: event.target.checked
     });
+    handleSelectFilter(option, event.target.checked);
   };
 
   const handleGenreChange = name => event => {
@@ -739,11 +750,19 @@ export default function Catalog() {
     console.log(event.target.value);
   };
 
-  const results = !searchTerm
-    ? games
-    : games.filter(game =>
-        game.t.toLowerCase().includes(searchTerm.toLocaleLowerCase())
-      );
+  function handleSelectFilter(option, checkbox) {
+    checkbox
+      ? // Add option to filter array.
+        filterArr.push(option)
+      : // Remove option from filter array.
+        (filterArr = filterArr.filter(item => item !== option));
+    console.log(filterArr);
+    console.log(checkbox);
+    // Filter table data.
+    //this.tableData = this.tableData.filter(item => filterArr.includes(item.color));
+    tableData = games.filter(item => filterArr.includes(item.a));
+    console.log(tableData);
+  }
 
   const renderFilter = (
     <React.Fragment>
@@ -805,7 +824,7 @@ export default function Catalog() {
             control={
               <CustomCheckbox
                 checked={availabilityState.checkedA}
-                onChange={handleAvailabilityChange("checkedA")}
+                onChange={handleAvailabilityChange("checkedA", 1)}
                 value="checkedA"
               />
             }
@@ -815,7 +834,7 @@ export default function Catalog() {
             control={
               <CustomCheckbox
                 checked={availabilityState.checkedU}
-                onChange={handleAvailabilityChange("checkedU")}
+                onChange={handleAvailabilityChange("checkedU", 2)}
                 value="checkedU"
               />
             }
@@ -825,7 +844,7 @@ export default function Catalog() {
             control={
               <CustomCheckbox
                 checked={availabilityState.checkedP}
-                onChange={handleAvailabilityChange("checkedP")}
+                onChange={handleAvailabilityChange("checkedP", 3)}
                 value="checkedP"
               />
             }
@@ -1520,15 +1539,9 @@ export default function Catalog() {
             {/* Main Content */}
             <Grid item xs={12} md={9}>
               <Grid container className={classes.gridContainer} spacing={3}>
-                <GridList cellHeight="auto">
+                <GridList className={classes.gridList} cellHeight="auto">
                   {results.map(game => (
-                    <Grid
-                      item
-                      className={classes.gridList}
-                      xs={12}
-                      sm={6}
-                      md={4}
-                    >
+                    <Grid item xs={12} sm={6} md={4}>
                       <GridListTile className={classes.gridTile}>
                         <img
                           src="https://source.unsplash.com/random"
